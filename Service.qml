@@ -134,11 +134,11 @@ QtObject {
   readonly property var provider: ({
     apiVersion: 1,
     name: "Currency",
-    icon: "\u20ac",
+    icon: "€",
     color: "#81c8b6",
     description: "Currency conversion with EUR-based cross rates, preferred and automatic targets",
     patterns: [
-      { id: "currency-symbol", regex: "[$\u20ac\u00a3]\s*\\d", flags: "", boost: 12, example: "$100 in EUR" },
+      { id: "currency-symbol", regex: "[$€£]\\s*\\d", flags: "", boost: 12, example: "$100 in EUR" },
       { id: "currency-code", regex: "\\d[\\d.,]*\\s*[a-z]{3}", flags: "i", boost: 10, example: "129 usd to try" }
     ],
     settings: [
