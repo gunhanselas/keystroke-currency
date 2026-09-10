@@ -3,7 +3,7 @@ import Quickshell
 import Quickshell.Io
 import "core/Currency.js" as Currency
 
-QtObject {
+Item {
   id: root
   property var shell: null
   property var manifest: null
