@@ -7,6 +7,7 @@ QtObject {
   id: root
   property var shell: null
   property var manifest: null
+  property var host: null
 
   readonly property string currencyCachePath: (Quickshell.env("XDG_CACHE_HOME") || (Quickshell.env("HOME") + "/.cache")) + "/keystroke/currency-rates.json"
   readonly property string usagePath: Quickshell.env("HOME") + "/.local/state/keystroke/currency-usage.json"
