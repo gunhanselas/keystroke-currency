@@ -1,0 +1,13 @@
+[Unit]
+Description=Refresh Keystroke Currency rates at 04:00 with offline catch-up
+
+[Timer]
+OnCalendar=*-*-* 04:00:00
+Persistent=true
+OnStartupSec=2min
+OnUnitInactiveSec=15min
+AccuracySec=30s
+Unit=keystroke-currency.service
+
+[Install]
+WantedBy=timers.target

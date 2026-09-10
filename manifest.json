@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "gunhan.keystroke-currency",
+  "name": "Keystroke Currency",
+  "version": "1.0.0",
+  "author": "gunhan",
+  "license": "MIT",
+  "description": "Currency conversion for the Keystroke command palette — EUR-based cross rates, preferred and automatic targets, daily cache",
+  "kinds": ["service"],
+  "keepLoaded": true,
+  "entryPoints": {
+    "service": "Service.qml"
+  },
+  "x-keystroke": {
+    "apiVersion": 1
+  }
+}

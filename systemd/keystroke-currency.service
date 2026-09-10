@@ -1,0 +1,8 @@
+[Unit]
+Description=Update Keystroke Currency daily exchange-rate cache
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 %h/.config/omarchy/plugins/gunhan.keystroke-currency/helpers/currency-refresh.py
+TimeoutStartSec=40
+UMask=0077

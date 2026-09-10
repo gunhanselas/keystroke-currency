@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -euo pipefail
+here=$(cd "$(dirname "$0")/.."; pwd)
+
+echo "=== QML unit tests ==="
+cd "$here/tests"
+QT_QPA_PLATFORM=offscreen QT_QUICK_BACKEND=software /usr/lib/qt6/bin/qmltestrunner -input .
+
+echo ""
+echo "=== Python cache tests ==="
+cd "$here/tests"
+python3 currency_cache_check.py -v
+
+echo ""
+echo "=== Manifest validation ==="
+cd "$here"
+if command -v omarchy &>/dev/null; then
+  omarchy plugin validate .
+else
+  echo "omarchy not found, skipping manifest validation"
+fi
