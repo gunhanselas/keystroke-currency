@@ -51,15 +51,34 @@ def build_cache(rows, fetched_at):
 
 def download():
     result = subprocess.run(
-        ['curl', '--fail', '--silent', '--show-error', '--max-time', '25', URL],
+        ['curl', '--fail', '--silent', '--show-error', '--max-time', '25', '--max-filesize', '1048576', URL],
         capture_output=True, text=True, check=True, timeout=30)
+    if len(result.stdout) > 1048576:
+        raise ValueError('Response exceeds 1MB size limit')
     return json.loads(result.stdout)
+
+
+def validate_path(path):
+    """Validate cache path: no symlinks, owned by current user, reasonable size."""
+    if path.is_symlink():
+        raise ValueError(f'Cache path is a symlink: {path}')
+    if not path.exists():
+        return
+    stat = path.stat()
+    if stat.st_uid != os.getuid():
+        raise ValueError(f'Cache path not owned by current user: {path}')
+    if stat.st_size > 1048576:
+        raise ValueError(f'Cache file exceeds 1MB: {path}')
 
 
 def refresh(path, fetch=download, now=None):
     path.parent.mkdir(parents=True, exist_ok=True)
-    with path.with_suffix('.lock').open('a') as lock:
+    lock_path = path.with_suffix('.lock')
+    if lock_path.is_symlink():
+        raise ValueError(f'Lock path is a symlink: {lock_path}')
+    with lock_path.open('a') as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
+        validate_path(path)
         try:
             cache = json.loads(path.read_text())
         except (OSError, ValueError):
@@ -71,7 +90,7 @@ def refresh(path, fetch=download, now=None):
         cache = build_cache(rows, fetched_at)
         temp_path = None
         try:
-            with tempfile.NamedTemporaryFile(mode='w', dir=path.parent, delete=False) as temp:
+            with tempfile.NamedTemporaryFile(mode='w', dir=path.parent, delete=False, follow_symlinks=False) as temp:
                 temp_path = Path(temp.name)
                 json.dump(cache, temp, ensure_ascii=True)
                 temp.flush()
